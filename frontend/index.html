@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth App</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <h1>Welcome to the Authentication App</h1>
+
+    <!-- Signup form -->
+    <form id="signup-form">
+        <h2>Sign Up</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Sign Up</button>
+        <p class="alert" id="signup-alert"></p>
+    </form>
+
+    <!-- Login form -->
+    <form id="login-form">
+        <h2>Login</h2>
+        <label for="login-username">Username:</label>
+        <input type="text" id="login-username" name="login-username" required>
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" name="login-password" required>
+        <button type="submit">Login</button>
+        <p class="alert" id="login-alert"></p>
+    </form>
+
+    <script>
+        // Signup form submission
+        document.getElementById('signup-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('http://localhost/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('signup-alert').textContent = 'Signup successful';
+            } else {
+                document.getElementById('signup-alert').textContent = `Error: ${data.error}`;
+            }
+        });
+
+        // Login form submission
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await fetch('http://localhost/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('login-alert').textContent = 'Login successful';
+            } else {
+                document.getElementById('login-alert').textContent = `Error: ${data.error}`;
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,42 @@
+services:
+  frontend:
+    image: my-nginx
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - backend
+    ports:
+      - 80:80
+    networks:
+      - app-net
+
+  backend:
+    image: my-node
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+  db:
+    image: mongo:8.0
+    healthcheck:
+      test: ["CMD-SHELL",'mongosh -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --eval "db.stats().ok"']
+    env_file:
+      - ./db.env
+    networks:
+      - app-net
+
+networks:
+  app-net:
